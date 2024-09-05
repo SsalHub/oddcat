@@ -13,7 +13,7 @@ public class RankScene : MonoBehaviour
 
     private void Start()
     {
-        _btnExit.onClick.AddListener(OnClicked_btnExit);
+        // _btnExit.onClick.AddListener(OnClicked_btnExit);
         Initialize();
     }
 
@@ -43,8 +43,13 @@ public class RankScene : MonoBehaviour
         */
     }
 
-    void OnClicked_btnExit()
+    public void OnClicked_btnExit()
     {
         SceneManager.LoadScene("MainScene");
+    }
+
+    public void onClick_PlayAgain()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }
