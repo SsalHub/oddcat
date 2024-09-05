@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private bool isDash;
     private bool isImmuned;
     private AudioSource audioSource;
+    RectTransform guideTransform;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour
         isDash = false;
         isImmuned = false;
         audioSource = GetComponent<AudioSource>();
+        guideTransform = guide.GetComponent<RectTransform>();
         StartCoroutine(countScore());
         StartCoroutine(showGuide());
     }
@@ -42,7 +44,7 @@ public class Player : MonoBehaviour
         v = Input.GetAxis("Vertical");
         rotate(h, v);
         move(h, v);
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             StartCoroutine(dash(h, v));
         }
@@ -54,7 +56,7 @@ public class Player : MonoBehaviour
         guide.SetActive(true);
         while (true)
         {
-            guide.transform.position = transform.position + new Vector3(0.2f, -0.2f, 0);
+            guideTransform.position = transform.position + new Vector3(0f, 0.9f, 0);
             time += Time.deltaTime;
             if (5f < time)
                 break;
@@ -76,7 +78,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if(!isImmuned && col.gameObject.CompareTag("Bullet"))
+        if (!isImmuned && col.gameObject.CompareTag("Bullet"))
         {
             Destroy(col.gameObject);
             StartCoroutine(runHitEvent());
@@ -127,7 +129,7 @@ public class Player : MonoBehaviour
         Vector3 unit = new Vector3(h, v, 0).normalized;
         float dashSpeed = 30f;
 
-        while(speed < dashSpeed)
+        while (speed < dashSpeed)
         {
             transform.position += unit * dashSpeed * Time.deltaTime;
             setPosInScreen();
@@ -142,7 +144,7 @@ public class Player : MonoBehaviour
     {
         if (h == 0 && v == 0) return;
         if (!isMoveKeyDown()) return;
-        Vector3 dir = new Vector3(v, h*-1, 0).normalized;
+        Vector3 dir = new Vector3(v, h * -1, 0).normalized;
         transform.eulerAngles = new Vector3(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
     }
 
@@ -157,14 +159,14 @@ public class Player : MonoBehaviour
         audioSource.Play();
         uiManager.minusLife();
         HP--;
-        if(HP <= 0)
+        if (HP <= 0)
         {
             gameOver();
             yield break;
         }
 
         isImmuned = true;
-        for (int i=0; i<20; i++)
+        for (int i = 0; i < 20; i++)
         {
             setAlpha(0.5f);
             yield return new WaitForSeconds(0.1f);
